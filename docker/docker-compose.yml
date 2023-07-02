@@ -1,0 +1,28 @@
+version: '3'
+services:
+  db:
+    image: mysql:8.0
+    networks:
+      - auth_net
+    volumes:
+      - auth_vol:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: auth_db
+      MYSQL_USER: auth_user
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+  app:
+    depends_on:
+      - db
+    build: .
+    networks:
+      - auth_net
+    volumes:
+      - ../apps/python:/app
+    ports:
+      - 5000:5000
+networks:
+  auth_net:
+volumes:
+  auth_vol:
